@@ -14,10 +14,5 @@ export const getters = {
 }
 
 export const actions = {
-  nuxtServerInit({
-    commit
-  }, {
-
-  })
 }
 export const strict = false
