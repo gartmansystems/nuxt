@@ -1,5 +1,5 @@
 <template>
-  <v-app dark>
+  <v-app :dark="isDark">
     <v-navigation-drawer
       :mini-variant.sync="miniVariant"
       :clipped="clipped"
@@ -7,6 +7,7 @@
       fixed
       app
     >
+      <g-navi-actions></g-navi-actions>      
       <v-list>
         <v-list-tile
           router
@@ -16,35 +17,20 @@
           exact
         >
           <v-list-tile-action>
-            <v-icon v-html="item.icon"></v-icon>
+            <v-icon :color="item.color" v-html="item.icon"></v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title v-text="item.title"></v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
+        </v-list-group>
       </v-list>
     </v-navigation-drawer>
-    <v-toolbar fixed app :clipped-left="clipped">
+    <v-toolbar style="z-index: 5" :color="isDark ? '' : 'primary'" dark fixed app :clipped-left="clipped">
       <v-toolbar-side-icon @click="drawer = !drawer"></v-toolbar-side-icon>
-      <v-btn
-        icon
-        @click.stop="miniVariant = !miniVariant"
-      >
-        <v-icon v-html="miniVariant ? 'chevron_right' : 'chevron_left'"></v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="clipped = !clipped"
-      >
-        <v-icon>web</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="fixed = !fixed"
-      >
-        <v-icon>remove</v-icon>
-      </v-btn>
-      <v-toolbar-title v-text="title"></v-toolbar-title>
+      <nuxt-link to="/" class="ml-2 mt-1 hidden-xs-only">
+        <img :src="require('@/assets/images/banner_logo.svg')" alt="Banner Logo" width="200px"/>
+      </nuxt-link>
       <v-spacer></v-spacer>
       <v-btn
         icon
@@ -52,49 +38,57 @@
       >
         <v-icon>menu</v-icon>
       </v-btn>
+      <v-menu attach light bottom left v-if="!isMobile">
+        <v-btn flat slot="activator">{{ customerNumber }}
+          <v-icon right>arrow_drop_down</v-icon>
+        </v-btn>
+        <!-- Placeholder -->
+        <v-card></v-card>
+      </v-menu>
     </v-toolbar>
     <v-content>
-      <v-container>
-        <nuxt />
-      </v-container>
+      <nuxt />
     </v-content>
     <v-navigation-drawer
       temporary
       :right="right"
       v-model="rightDrawer"
+      :width="isMobile ? 250 : 350"
       fixed
     >
-      <v-list>
-        <v-list-tile @click.native="right = !right">
-          <v-list-tile-action>
-            <v-icon light>compare_arrows</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-title>Switch drawer (click me)</v-list-tile-title>
-        </v-list-tile>
-      </v-list>
     </v-navigation-drawer>
-    <v-footer :fixed="fixed" app>
-      <span>&copy; 2017</span>
+     <v-footer>
+      <v-card width="100%" flat tile class="text-xs-center">
+        <v-card-text>
+          Copyright &copy; 1978-2018 <strong>Gartman Systems.</strong> All rights reserved. - v{{ currentVersion }}
+        </v-card-text>
+      </v-card>
     </v-footer>
   </v-app>
 </template>
 
 <script>
-  export default {
-    data () {
-      return {
-        clipped: false,
-        drawer: true,
-        fixed: false,
-        items: [
-          { icon: 'apps', title: 'Welcome', to: '/' },
-          { icon: 'bubble_chart', title: 'Inspire', to: '/inspire' }
-        ],
-        miniVariant: false,
-        right: true,
-        rightDrawer: false,
-        title: 'Vuetify.js'
-      }
+import { mapGetters } from 'vuex'
+export default {
+  components: {
+  },
+  data() {
+    return {
+      clipped: true,
+      drawer: true,
+      fixed: true,
+      items: [{ icon: 'home', title: 'Home', to: '/', color: 'primary' }],
+      miniVariant: false,
+      right: true,
+      rightDrawer: false,
+      currentVersion: process.env.version,
+      tabIndex: 0
+    }
+  },
+  computed: {
+    customerNumber() {
+      return 'Gartman'
     }
   }
+}
 </script>

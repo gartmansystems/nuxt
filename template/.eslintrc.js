@@ -11,6 +11,10 @@ module.exports = {
     'html'
   ],
   // add your custom rules here
-  rules: {},
+  rules: {
+    "space-in-parens": 0,
+    "space-before-function-paren": 0,
+    "eol-last": 0
+  },
   globals: {}
 }
